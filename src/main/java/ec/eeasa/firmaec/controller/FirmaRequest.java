@@ -4,6 +4,9 @@ public class FirmaRequest {
     private String pdfBase64;
     private String p12Base64;
     private String password;
+    private int pagina;
+    private float posX;
+    private float posY;
 
     // Getters y Setters
     public String getPdfBase64() {
@@ -28,5 +31,29 @@ public class FirmaRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public int getPagina() {
+        return pagina;
+    }
+
+    public void setPagina(int pagina) {
+        this.pagina = pagina;
+    }
+
+    public float getPosX() {
+        return posX;
+    }
+
+    public void setPosX(float posX) {
+        this.posX = posX;
+    }
+
+    public float getPosY() {
+        return posY;
+    }
+
+    public void setPosY(float posY) {
+        this.posY = posY;
     }
 }

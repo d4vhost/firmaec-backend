@@ -35,7 +35,10 @@ public class FirmaCentralizadaController {
             String pdfFirmado = firmaECService.firmarDocumento(
                     request.getPdfBase64(), 
                     request.getP12Base64(), 
-                    request.getPassword()
+                    request.getPassword(),
+                    request.getPagina(),
+                    request.getPosX(),
+                    request.getPosY()
             );
 
             // Una vez que tenemos la firma, devolvemos el PDF firmado
