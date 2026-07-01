@@ -9,7 +9,6 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
@@ -136,25 +135,27 @@ public class FirmaECService {
                 }
 
                 try (PDPageContentStream cs = new PDPageContentStream(document, pdPage, PDPageContentStream.AppendMode.APPEND, true, true)) {
-                    float qrSize = 55f;
+                    // Ajustado a 36f
+                    float qrSize = 36f;
                     cs.drawImage(pdImage, posX, posY, qrSize, qrSize);
                     LOGGER.info("QR dibujado en x=" + posX + " y=" + posY);
 
-                    // Texto pegado al QR (3pt de separacion, alineado al borde superior)
-                    float textX = posX + qrSize + 3;
-                    float textY = posY + qrSize - 7;
+                    // Texto extremadamente pegado al QR (1pt de separacion)
+                    float textX = posX + qrSize + 1;
+                    float textY = posY + qrSize - 8f;
 
                     cs.beginText();
-                    cs.setFont(PDType1Font.COURIER, 6);
+                    // Reducir solo este tamaño más (3.5f)
+                    cs.setFont(PDType1Font.COURIER, 3.5f);
                     cs.newLineAtOffset(textX, textY);
-                    cs.showText("Validar unicamente en FirmaEC.");
-                    cs.newLineAtOffset(0, -8);
-                    cs.showText("Firmado electronicamente por:");
-                    cs.setFont(PDType1Font.COURIER_BOLD, 8);
-                    cs.newLineAtOffset(0, -10);
+                    cs.showText("Validar \u00FAnicamente en FirmaEC.");
+                    cs.newLineAtOffset(0, -4.5f);
+                    cs.showText("Firmado electr\u00F3nicamente por:");
+                    cs.setFont(PDType1Font.COURIER_BOLD, 5.5f);
+                    cs.newLineAtOffset(0, -6f);
                     cs.showText(nameLine1);
                     if (!nameLine2.isEmpty()) {
-                        cs.newLineAtOffset(0, -9);
+                        cs.newLineAtOffset(0, -5.5f);
                         cs.showText(nameLine2);
                     }
                     cs.endText();
@@ -225,8 +226,11 @@ public class FirmaECService {
     private void generateQRCodeToFile(String text, File outputFile) throws Exception {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         Map<EncodeHintType, Object> hints = new HashMap<>();
-        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.M);
-        hints.put(EncodeHintType.MARGIN, 1);
+        // Level H genera una matriz más densa (cuadros más pequeños)
+        hints.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.H);
+        // Forzamos la versión 5 o 6 para tener la misma cantidad de "ruido/cuadritos" que FirmaEC
+        hints.put(EncodeHintType.QR_VERSION, 6);
+        hints.put(EncodeHintType.MARGIN, 0); // 0 elimina el borde blanco interno
 
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300, hints);
         int w = bitMatrix.getWidth();
