@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/firma")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200"})
 public class FirmaCentralizadaController {
 
     private static final Logger LOGGER = Logger.getLogger(FirmaCentralizadaController.class.getName());
@@ -81,7 +81,9 @@ public class FirmaCentralizadaController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             LOGGER.severe("Error verificando documento: " + e.getMessage());
-            return ResponseEntity.internalServerError().build();
+            Map<String, Object> errorResp = new HashMap<>();
+            errorResp.put("error", "Error al verificar el documento.");
+            return ResponseEntity.internalServerError().body(errorResp);
         }
     }
 
@@ -98,13 +100,21 @@ public class FirmaCentralizadaController {
 
         try {
             byte[] p12Bytes = java.util.Base64.getDecoder().decode(p12Base64);
+            // Limitar tamaño del certificado (máx 50KB)
+            if (p12Bytes.length > 50 * 1024) {
+                Map<String, Object> errorResp = new HashMap<>();
+                errorResp.put("valido", false);
+                errorResp.put("message", "El archivo del certificado es demasiado grande.");
+                return ResponseEntity.badRequest().body(errorResp);
+            }
             Map<String, Object> response = verificacionService.validarCertificadoP12(p12Bytes, password);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             LOGGER.warning("Error validando certificado: " + e.getMessage());
             Map<String, Object> errorResp = new HashMap<>();
             errorResp.put("valido", false);
-            errorResp.put("error", e.getMessage());
+            // Mensaje genérico sin exponer detalles internos
+            errorResp.put("message", "Certificado inválido o contraseña incorrecta.");
             return ResponseEntity.ok(errorResp);
         }
     }

@@ -36,8 +36,8 @@ public class VerificacionService {
         "UANATACA",
         "LAZZATE",
         "DATILMEDIA",
-        "ARGOS",
-        "FIRMAEC"
+        "ARGOS"
+        //"FIRMAEC"
     );
 
     public List<Map<String, Object>> verificarDocumento(String pdfBase64) {
@@ -285,7 +285,6 @@ public class VerificacionService {
             }
         } catch (Exception e) {
             LOGGER.severe("Error verificando documento: " + e.getMessage());
-            e.printStackTrace();
         }
 
         return firmantes;

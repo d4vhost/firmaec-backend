@@ -94,7 +94,6 @@ public class FirmaECService {
 
         } catch (Exception e) {
             LOGGER.severe("Error al firmar: " + e.getMessage());
-            e.printStackTrace();
             throw new RuntimeException("Error en la firma electronica", e);
         }
     }
