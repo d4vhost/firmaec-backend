@@ -36,8 +36,9 @@ public class VerificacionService {
         "UANATACA",
         "LAZZATE",
         "DATILMEDIA",
-        "ARGOS",
-        "FIRMAEC"
+        "ARGOS"
+        // "FIRMASEC"
+    
     );
 
     public List<Map<String, Object>> verificarDocumento(String pdfBase64) {
