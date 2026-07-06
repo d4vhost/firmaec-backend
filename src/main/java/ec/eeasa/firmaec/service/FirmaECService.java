@@ -105,7 +105,8 @@ public class FirmaECService {
         // Generar QR como archivo temporal PNG
         File tempQR = File.createTempFile("qr_firma_", ".png");
         try {
-            generateQRCodeToFile("https://www.firmadigital.gob.ec/validador/", tempQR);
+            // El MINTEL dio de baja la sub-url /validador/. Se usa el dominio principal oficial.
+            generateQRCodeToFile("https://www.firmadigital.gob.ec/", tempQR);
             LOGGER.info("QR temporal creado: " + tempQR.getAbsolutePath() + " (" + tempQR.length() + " bytes)");
 
             try (PDDocument document = PDDocument.load(pdfBytes)) {

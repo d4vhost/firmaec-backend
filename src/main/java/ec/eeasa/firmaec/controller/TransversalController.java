@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/api/transversal")
-@CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200", "https://localhost:4200", "https://127.0.0.1:4200"})
+@CrossOrigin(origins = {"http://localhost:4200", "http://127.0.0.1:4200", "https://localhost:4200", "https://127.0.0.1:4200", "https://app.eeasa.com.ec:7001", "https://app.eeasa.com.ec"})
 public class TransversalController {
 
     private static final Logger LOGGER = Logger.getLogger(TransversalController.class.getName());
